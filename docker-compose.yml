@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  server:
+    build:
+      context: ./server
+    env_file:
+      - ./server/.env
+    container_name: grammar-express-server
+    ports:
+      - "5000:5000"
+    networks:
+      - ai-grammar-net
+      
+    restart: unless-stopped
+
+  client:
+    build:
+      context: ./client
+      args:
+        VITE_PRIVY_APP_ID: cmpp0tqvn012w0cl5pe2mvu43
+    container_name: ai-grammar-react
+    depends_on:
+      - server
+    ports:
+      - "5173:3000"
+    networks:
+      - ai-grammar-net
+    restart: unless-stopped
+
+networks:
+  ai-grammar-net:
+    driver: bridge
