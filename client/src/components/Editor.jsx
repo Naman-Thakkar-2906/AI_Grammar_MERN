@@ -4,7 +4,7 @@ import { FaSpellCheck, FaSyncAlt, FaCheck, FaPencilAlt } from "react-icons/fa";
 import { SiGrammarly } from "react-icons/si";
 import { usePrivy } from "@privy-io/react-auth";
 
-const API_BASE = "http://localhost:5000";
+const API_BASE = "https://ai-grammar-mern.onrender.com";
 
 const Editor = () => {
   const { getAccessToken } = usePrivy();
@@ -14,7 +14,11 @@ const Editor = () => {
   const [correctedSentences, setCorrectedSentences] = useState([]);
   const [spellCheckedText, setSpellCheckedText] = useState("");
   const [grammarCheckedText, setGrammarCheckedText] = useState("");
-  const [loading, setLoading] = useState({ spell: false, grammar: false, rephrase: false });
+  const [loading, setLoading] = useState({
+    spell: false,
+    grammar: false,
+    rephrase: false,
+  });
   const [error, setError] = useState("");
 
   const authHeader = async () => {
@@ -42,12 +46,15 @@ const Editor = () => {
       const response = await axios.post(
         `${API_BASE}/api/spellcheck`,
         { text },
-        { headers }
+        { headers },
       );
       setSpellCheckedText(response.data.correctedText || "");
     } catch (err) {
       console.error("Error checking spelling:", err);
-      setError(err?.response?.data?.error || "Spell check failed. Is the server running on port 5000?");
+      setError(
+        err?.response?.data?.error ||
+          "Spell check failed. Is the server running on port 5000?",
+      );
     } finally {
       setLoading((l) => ({ ...l, spell: false }));
     }
@@ -62,12 +69,15 @@ const Editor = () => {
       const response = await axios.post(
         `${API_BASE}/api/grammarcheck`,
         { text },
-        { headers }
+        { headers },
       );
       setGrammarCheckedText(response.data.correctedText || "");
     } catch (err) {
       console.error("Error checking grammar:", err);
-      setError(err?.response?.data?.error || "Grammar check failed. Is the server running on port 5000?");
+      setError(
+        err?.response?.data?.error ||
+          "Grammar check failed. Is the server running on port 5000?",
+      );
     } finally {
       setLoading((l) => ({ ...l, grammar: false }));
     }
@@ -82,7 +92,7 @@ const Editor = () => {
       const response = await axios.post(
         `${API_BASE}/api/analyze`,
         { sentence: selectedSentence },
-        { headers }
+        { headers },
       );
       setRephrasedSentences(response.data.rephrasedSentences || []);
     } catch (err) {
@@ -123,10 +133,18 @@ const Editor = () => {
               </div>
             )}
             <div className="flex justify-end mt-4 space-x-4">
-              <Button onClick={checkSpelling} icon={<FaSpellCheck />} disabled={loading.spell}>
+              <Button
+                onClick={checkSpelling}
+                icon={<FaSpellCheck />}
+                disabled={loading.spell}
+              >
                 {loading.spell ? "Checking..." : "Check Spelling"}
               </Button>
-              <Button onClick={checkGrammar} icon={<SiGrammarly />} disabled={loading.grammar}>
+              <Button
+                onClick={checkGrammar}
+                icon={<SiGrammarly />}
+                disabled={loading.grammar}
+              >
                 {loading.grammar ? "Checking..." : "Check Grammar"}
               </Button>
             </div>
@@ -154,7 +172,11 @@ const Editor = () => {
                 Selected Sentence:
               </h3>
               <p className="mb-4">{selectedSentence}</p>
-              <Button onClick={rephraseSentence} icon={<FaSyncAlt />} disabled={loading.rephrase}>
+              <Button
+                onClick={rephraseSentence}
+                icon={<FaSyncAlt />}
+                disabled={loading.rephrase}
+              >
                 {loading.rephrase ? "Rephrasing..." : "Rephrase"}
               </Button>
             </div>
