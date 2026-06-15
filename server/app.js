@@ -15,6 +15,7 @@ app.use(
       "http://localhost:3000",
       "http://localhost:5174",
       "http://localhost:5173",
+      "https://ai-grammar-mern.onrender.com",
     ],
     methods: ["GET", "POST"],
     allowedHeaders: ["Authorization", "Content-Type"],
@@ -28,9 +29,6 @@ app.use("/api/analyze", analyzeRouter);
 app.use("/api/grammarcheck", grammarCheck);
 app.use("/api/spellcheck", spellChecker);
 //start server
-
-console.log(process.env.API_LINK);
-console.log(process.env.API_KEY);
 
 app.listen(port, "0.0.0.0", () => {
   console.log(`AI Writing app listening at http://localhost:${port}`);
