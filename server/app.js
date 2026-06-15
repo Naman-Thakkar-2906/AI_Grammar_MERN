@@ -31,6 +31,7 @@ app.use("/api/grammarcheck", grammarCheck);
 app.use("/api/spellcheck", spellChecker);
 //start server
 
+
 app.listen(port, "0.0.0.0", () => {
   console.log(`AI Writing app listening at http://localhost:${port}`);
 });
