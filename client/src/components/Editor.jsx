@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { FaSpellCheck, FaSyncAlt, FaCheck, FaPencilAlt } from "react-icons/fa";
+import { FaSpellCheck, FaSyncAlt, FaCheck, FaPencilAlt, FaTimes } from "react-icons/fa";
 import { SiGrammarly } from "react-icons/si";
 import { usePrivy } from "@privy-io/react-auth";
 
@@ -108,156 +108,199 @@ const Editor = () => {
     setCorrectedSentences([...correctedSentences, sentence]);
   };
 
+  const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
+  const charCount = text.length;
+
   return (
-    <div className="container mx-auto px-4 py-8 bg-gray-100 min-h-screen">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="md:col-span-2">
-          <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
-            <h2 className="text-2xl font-bold mb-4 text-blue-600">
-              AI Writing Assistant
-            </h2>
-            <p className="mb-4 text-gray-600">
-              Enhance your writing with our advanced AI tools.
-            </p>
-            <textarea
-              value={text}
-              onChange={handleTextChange}
-              onMouseUp={handleSentenceSelection}
-              placeholder="Type your text here..."
-              rows={10}
-              className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-            />
+    <div className="flex flex-col lg:flex-row min-h-[calc(100vh-60px)] bg-[#0b0a09] text-stone-250 selection:bg-amber-600/20">
+      {/* Left Workspace Panel - Center-styled Composition Sheet */}
+      <div className="lg:w-[65%] p-6 md:p-10 lg:p-12 flex flex-col justify-between border-r border-stone-900/40 h-auto lg:h-[calc(100vh-60px)] overflow-y-auto bg-[#0b0a09]">
+        <div className="flex flex-col flex-grow max-w-2xl w-full mx-auto">
+          <div className="flex justify-between items-center border-b border-stone-900/30 pb-4 mb-8">
+            <div>
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-stone-500 font-sans">
+                Manuscript Canvas
+              </span>
+              <p className="text-stone-500 text-[11px] font-light mt-0.5">
+                Highlight any sentence to prompt inline suggestions.
+              </p>
+            </div>
+            <div className="flex items-center gap-4 text-[11px] text-stone-500 font-light font-sans">
+              <span>{wordCount} words</span>
+              <span className="w-1 h-1 rounded-full bg-stone-850"></span>
+              <span>{charCount} characters</span>
+            </div>
+          </div>
+          
+          <textarea
+            value={text}
+            onChange={handleTextChange}
+            onMouseUp={handleSentenceSelection}
+            placeholder="Start typing your manuscript here..."
+            className="w-full flex-grow bg-transparent border-0 focus:ring-0 focus:outline-none placeholder-stone-700 resize-none font-serif-editor text-base md:text-lg leading-[2.0] text-stone-100 min-h-[350px]"
+          />
+        </div>
+
+        {/* Action bar aligned with writing canvas */}
+        <div className="max-w-2xl w-full mx-auto flex flex-col sm:flex-row justify-between sm:items-center border-t border-stone-900/30 pt-6 mt-8 gap-4">
+          <div className="flex-grow max-w-sm">
             {error && (
-              <div className="mt-3 text-red-600 bg-red-50 border border-red-200 rounded p-2 text-sm">
+              <div className="text-rose-450 bg-rose-950/15 border border-rose-900/30 rounded px-3.5 py-2 text-[10px] leading-relaxed font-sans">
                 {error}
               </div>
             )}
-            <div className="flex justify-end mt-4 space-x-4">
-              <Button
-                onClick={checkSpelling}
-                icon={<FaSpellCheck />}
-                disabled={loading.spell}
-              >
-                {loading.spell ? "Checking..." : "Check Spelling"}
-              </Button>
-              <Button
-                onClick={checkGrammar}
-                icon={<SiGrammarly />}
-                disabled={loading.grammar}
-              >
-                {loading.grammar ? "Checking..." : "Check Grammar"}
-              </Button>
-            </div>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <ResultSection
-              title="Spell Checked Text"
-              text={spellCheckedText}
-              onAccept={() => addCorrectedSentence(spellCheckedText)}
-              icon={<FaSpellCheck className="text-green-500" />}
-            />
-            <ResultSection
-              title="Grammar Checked Text"
-              text={grammarCheckedText}
-              onAccept={() => addCorrectedSentence(grammarCheckedText)}
-              icon={<SiGrammarly className="text-blue-500" />}
-            />
+          <div className="flex items-center justify-end gap-3 shrink-0">
+            <button
+              onClick={checkSpelling}
+              disabled={loading.spell}
+              className="bg-stone-100 hover:bg-white text-stone-950 px-4 py-2 rounded font-medium text-xs transition duration-150 flex items-center gap-1.5 cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
+            >
+              <FaSpellCheck className="text-[11px]" />
+              {loading.spell ? "Polishing..." : "Check Spelling"}
+            </button>
+            <button
+              onClick={checkGrammar}
+              disabled={loading.grammar}
+              className="bg-transparent border border-stone-800 hover:bg-stone-900 hover:border-stone-700 text-stone-200 px-4 py-2 rounded font-medium text-xs transition duration-150 flex items-center gap-1.5 cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
+            >
+              <SiGrammarly className="text-[11px] text-amber-600/70" />
+              {loading.grammar ? "Reviewing..." : "Analyze Grammar"}
+            </button>
           </div>
+        </div>
+      </div>
 
-          {selectedSentence && (
-            <div className="bg-white shadow-lg rounded-lg p-6 my-8">
-              <h3 className="text-xl font-semibold mb-4 flex items-center">
-                <FaPencilAlt className="mr-2 text-purple-500" />
-                Selected Sentence:
-              </h3>
-              <p className="mb-4">{selectedSentence}</p>
-              <Button
-                onClick={rephraseSentence}
-                icon={<FaSyncAlt />}
-                disabled={loading.rephrase}
+      {/* Right Assistant Panel - Styled like editorial margins comments */}
+      <div className="lg:w-[35%] bg-[#12100f] p-6 lg:p-8 h-auto lg:h-[calc(100vh-60px)] overflow-y-auto space-y-6">
+        <div>
+          <h2 className="text-[10px] font-semibold uppercase tracking-wider text-stone-500 font-sans">
+            Editorial Margin
+          </h2>
+          <p className="text-stone-550 text-[11px] font-light mt-0.5">
+            Collaborate with the AI writing assistant here.
+          </p>
+        </div>
+
+        {/* Selected Sentence / Rephrase inline annotation tool */}
+        {selectedSentence && (
+          <div className="suggestion-card p-5 rounded space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="text-[10px] font-semibold tracking-wider text-amber-500 uppercase flex items-center gap-1.5 font-sans">
+                <FaPencilAlt className="text-[9px]" />
+                Selected Passage
+              </span>
+              <button 
+                onClick={() => setSelectedSentence("")}
+                className="text-stone-600 hover:text-stone-400 p-0.5 cursor-pointer transition-colors"
               >
-                {loading.rephrase ? "Rephrasing..." : "Rephrase"}
-              </Button>
+                <FaTimes className="text-[9px]" />
+              </button>
             </div>
-          )}
+            <p className="text-stone-300 text-xs leading-relaxed italic border-l border-amber-600/40 pl-3 font-serif-editor">
+              "{selectedSentence}"
+            </p>
+            <button
+              onClick={rephraseSentence}
+              disabled={loading.rephrase}
+              className="bg-stone-900 border border-stone-850 hover:bg-stone-800 text-stone-200 px-3 py-1.5 rounded font-medium text-[10px] transition duration-150 flex items-center gap-1.5 cursor-pointer"
+            >
+              <FaSyncAlt className="text-[8px] animate-spin-slow" />
+              {loading.rephrase ? "Rewriting..." : "Suggest Rephrasing"}
+            </button>
+          </div>
+        )}
 
-          {rephrasedSentences.length > 0 && (
-            <div className="bg-white shadow-lg rounded-lg p-6 my-8">
-              <h3 className="text-xl font-semibold mb-4 flex items-center">
-                <FaSyncAlt className="mr-2 text-indigo-500" />
-                Rephrased Sentences:
-              </h3>
+        {/* Rephrased output suggestions */}
+        {rephrasedSentences.length > 0 && (
+          <div className="suggestion-card p-5 rounded space-y-4">
+            <h3 className="text-[10px] font-semibold tracking-wider text-amber-500 uppercase flex items-center gap-1.5 font-sans">
+              <FaSyncAlt className="text-[9px]" />
+              Suggested Alternatives
+            </h3>
+            <div className="space-y-4 pt-1 font-serif-editor">
               {rephrasedSentences.map((sentence, index) => (
                 <div
                   key={index}
-                  className="mb-4 pb-4 border-b border-gray-200 last:border-b-0"
+                  className="pb-4 border-b border-stone-900/60 last:border-b-0 last:pb-0 space-y-2.5"
                 >
-                  <p className="mb-2">{sentence}</p>
-                  <Button
+                  <p className="text-stone-300 text-xs leading-relaxed">
+                    {sentence}
+                  </p>
+                  <button
                     onClick={() => addCorrectedSentence(sentence)}
-                    icon={<FaCheck />}
+                    className="bg-stone-900 border border-stone-850 hover:bg-stone-800 text-stone-250 px-2.5 py-1 rounded font-medium text-[9px] transition duration-150 flex items-center gap-1 cursor-pointer font-sans"
                   >
-                    Accept
-                  </Button>
+                    <FaCheck className="text-[8px] text-amber-500" />
+                    Apply suggest
+                  </button>
                 </div>
               ))}
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
-        <div className="md:col-span-1">
-          <div className="bg-white shadow-lg rounded-lg p-6 sticky top-8">
-            <h3 className="text-xl font-semibold mb-4 flex items-center">
-              <FaCheck className="mr-2 text-green-500" />
-              Corrected Sentences
-            </h3>
-            <p className="mb-4 text-gray-600">
-              Your approved corrections will appear here.
-            </p>
-            {correctedSentences.length > 0 ? (
-              correctedSentences.map((sentence, index) => (
+        {/* Spell Check & Grammar Check stream modules */}
+        <ResultSection
+          title="Spelling Suggestion"
+          text={spellCheckedText}
+          onAccept={() => addCorrectedSentence(spellCheckedText)}
+          icon={<FaSpellCheck />}
+          isSpelling={true}
+        />
+        <ResultSection
+          title="Grammar Review"
+          text={grammarCheckedText}
+          onAccept={() => addCorrectedSentence(grammarCheckedText)}
+          icon={<SiGrammarly />}
+          isSpelling={false}
+        />
+
+        {/* Workspace approved revisions log */}
+        <div className="border border-stone-900 bg-[#0e0d0c]/60 p-5 rounded space-y-3">
+          <h3 className="text-[10px] font-semibold tracking-wider text-stone-500 uppercase flex items-center gap-1.5 font-sans">
+            <FaCheck className="text-stone-600 text-[9px]" />
+            Accepted Changes log
+          </h3>
+          {correctedSentences.length > 0 ? (
+            <div className="space-y-3 pt-1 font-serif-editor">
+              {correctedSentences.map((sentence, index) => (
                 <div
                   key={index}
-                  className="mb-2 pb-2 border-b border-gray-200 last:border-b-0"
+                  className="pb-3 border-b border-stone-900/40 last:border-b-0 text-stone-350 text-xs leading-relaxed"
                 >
-                  <p>{sentence}</p>
+                  {sentence}
                 </div>
-              ))
-            ) : (
-              <p className="text-gray-500 italic">
-                No corrected sentences yet.
-              </p>
-            )}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-stone-600 italic text-[11px] font-light font-sans">
+              No changes accepted yet in this session.
+            </p>
+          )}
         </div>
       </div>
     </div>
   );
 };
 
-const Button = ({ onClick, children, icon, disabled }) => (
-  <button
-    onClick={onClick}
-    disabled={disabled}
-    className="bg-blue-600 text-white px-4 py-2 rounded-full font-semibold hover:bg-blue-700 transition duration-300 flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
-  >
-    {icon && <span className="mr-2">{icon}</span>}
-    {children}
-  </button>
-);
-
-const ResultSection = ({ title, text, onAccept, icon }) =>
+const ResultSection = ({ title, text, onAccept, icon, isSpelling }) =>
   text ? (
-    <div className="bg-white shadow-lg rounded-lg p-6">
-      <h3 className="text-xl font-semibold mb-4 flex items-center">
-        {icon}
-        <span className="ml-2">{title}</span>
+    <div className={`${isSpelling ? "suggestion-card-spelling" : "suggestion-card"} p-5 rounded space-y-4`}>
+      <h3 className={`text-[10px] font-semibold tracking-wider ${isSpelling ? "text-rose-500" : "text-amber-500"} uppercase flex items-center gap-1.5 font-sans`}>
+        <span className="text-[11px]">{icon}</span>
+        {title}
       </h3>
-      <p className="mb-4 whitespace-pre-wrap">{text}</p>
-      <Button onClick={onAccept} icon={<FaCheck />}>
-        Accept
-      </Button>
+      <p className="text-stone-300 text-xs leading-relaxed bg-stone-950/40 border border-stone-900/50 p-4 rounded whitespace-pre-wrap font-serif-editor">
+        {text}
+      </p>
+      <button
+        onClick={onAccept}
+        className="bg-stone-900 border border-stone-850 hover:bg-stone-800 text-stone-250 px-3 py-1.5 rounded font-medium text-[10px] transition duration-150 flex items-center gap-1.5 cursor-pointer font-sans"
+      >
+        <FaCheck className={`text-[8px] ${isSpelling ? "text-rose-500" : "text-amber-500"}`} />
+        Accept suggestion
+      </button>
     </div>
   ) : null;
 

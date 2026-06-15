@@ -6,6 +6,7 @@ import About from "./components/About";
 import Editor from "./components/Editor";
 import Navbar from "./components/Navbar";
 import LoginPage from "./components/Login";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
 
@@ -15,7 +16,14 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
-        <Route path="/write" element={<Editor />} />
+        <Route
+          path="/write"
+          element={
+            <ProtectedRoute>
+              <Editor />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/login" element={<LoginPage />} />
       </Routes>
     </Router>
