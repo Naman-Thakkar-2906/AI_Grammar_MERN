@@ -16,7 +16,7 @@ app.use(
       "http://localhost:5174",
       "http://localhost:5173",
       "https://ai-grammar-mern.onrender.com",
-      "https://ai-grammar-by-naman-thakkar-1-e4styel1p.vercel.app/",
+      "https://ai-grammar-by-naman-thakkar-1.vercel.app",
     ],
     methods: ["GET", "POST"],
     allowedHeaders: ["Authorization", "Content-Type"],
