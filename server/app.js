@@ -9,20 +9,20 @@ const app = express();
 const port = 5000;
 
 //config cors
-// app.use(
-//   cors({
-//     origin: [
-//       "http://localhost:3000",
-//       "http://localhost:5174",
-//       "http://localhost:5173",
-//       "https://ai-grammar-by-naman-thakkar-1.vercel.app",
-//     ],
-//     methods: ["GET", "POST"],
-//     allowedHeaders: ["Authorization", "Content-Type"],
-//     credentials: true,
-//   }),
-// );
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:5174",
+      "http://localhost:5173",
+      "https://ai-grammar-by-naman-thakkar-1.vercel.app",
+    ],
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Authorization", "Content-Type"],
+    credentials: true,
+  }),
+);
+// app.use(cors());
 app.use(express.json()); //for parsing application/json
 
 //routes
