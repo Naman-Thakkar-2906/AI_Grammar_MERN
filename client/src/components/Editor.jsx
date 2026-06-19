@@ -157,7 +157,7 @@ const Editor = () => {
               className="bg-stone-100 hover:bg-white text-stone-950 px-4 py-2 rounded font-medium text-xs transition duration-150 flex items-center gap-1.5 cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
             >
               <FaSpellCheck className="text-[11px]" />
-              {loading.spell ? "Polishing..." : "Check Spelling"}
+              {loading.spell ? "Polishing..." : "Check Spelling & Grammar"}
             </button>
             <button
               onClick={checkGrammar}

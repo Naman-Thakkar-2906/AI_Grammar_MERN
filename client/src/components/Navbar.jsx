@@ -12,7 +12,9 @@ const Navbar = () => {
       <div className="flex justify-between items-center h-12 bg-[#0b0a09] border-b border-stone-900/30 px-6">
         <div className="flex items-center space-x-2">
           <FaPencilAlt className="text-stone-500 text-xs" />
-          <span className="text-xs font-semibold text-stone-400 font-editorial-heading">Companion</span>
+          <span className="text-xs font-semibold text-stone-400 font-editorial-heading">
+            Companion
+          </span>
         </div>
         <div className="animate-spin rounded-full h-3.5 w-3.5 border-t-2 border-b-2 border-stone-600"></div>
       </div>
@@ -34,9 +36,9 @@ const Navbar = () => {
             <NavLink to="/" active={location.pathname === "/"}>
               Home
             </NavLink>
-            <NavLink to="/about" active={location.pathname === "/about"}>
+            {/* <NavLink to="/about" active={location.pathname === "/about"}>
               Story
-            </NavLink>
+            </NavLink> */}
             {authenticated && (
               <NavLink to="/write" active={location.pathname === "/write"}>
                 Workspace
